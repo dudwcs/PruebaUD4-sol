@@ -56,8 +56,6 @@
             }
 
 
-
-
             $exito =    createBook($title, $pub_Id, $isbn, $pdate, $book_author_ids);
         }
     } catch (Exception $ex) {
@@ -174,8 +172,7 @@
             $conProyecto = getConnection();
 
             $pdostmt = $conProyecto->prepare("SELECT author_id, "
-                . "CONCAT (COALESCE(a.last_name, ''), ' ', COALESCE(a.first_name,''), ' ',"
-                . "COALESCE(a.middle_name, '' )) as completeName " .
+                . "CONCAT_WS (' ', a.last_name, a.first_name,a.middle_name) as completeName " .
                 " FROM authors a ORDER BY a.last_name");
 
             $pdostmt->execute();
@@ -187,7 +184,7 @@
         /**
          * Summary of createBook
          * @param string $title título del libro a crear
-         * @param int|null $publisher_id  id del editor del libro a crear
+         * @param int $publisher_id  id del editor del libro a crear
          * @param string|null $isbn  ISBN del libro a crear
          * @param DateTimeImmutable|null $pubDate  fecha de publicación del libro a crear
          * @param array|null $book_author_ids  array con los ids de los autores, si los hay, null en caso contrario
@@ -195,7 +192,7 @@
          */
         function createBook(
             string $title,
-            ?string $publisher_id,
+            string $publisher_id,
             ?string $isbn,
             ?DateTimeImmutable $pubDate,
             ?array $book_author_ids
@@ -216,7 +213,11 @@
                     $pubDate->format("Y-m-d") : null);
                 $pdostmt->bindValue("publisher_id", $publisher_id);
 
+                
+                
                 $pdostmt->execute();
+                $pdostmt->debugDumpParams();
+
 
                 //Recuperamos el id de la última inserción
                 $book_id = $conProyecto->lastInsertId();
