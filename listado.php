@@ -1,60 +1,49 @@
 <?php
 require_once 'conexion.php';
-require_once 'borrar.php';
 
-$libro_borrado = false;
+
 $cod = null;
 
-if (isset($_POST["id"], $_POST["borrar"])) {
-    $cod = $_POST["id"];
-    $libro_borrado = borrar_libro($cod);
-}
 
-$libros_array = obtener_libros();
+$productos_array = obtener_productos();
 /**
- * obtener_libros
- * Consulta la tabla books para obtener los book_id y title ordenados por title
- * @return array array con tantos registros como tuplas haya y por cada registro un array con 2 claves: book_id y title 
+ * obtener_productos
+ * Consulta la tabla products para obtener los datos ordenados por ProductID descendentemente
+ * @return array array con tantos registros como tuplas haya y por cada registro un array con tantas claves como columnas haya
  */
-function obtener_libros(): array
+function obtener_productos(): array
 {
   
-    $libros_array = null;
+    $productos_array = null;
     try {
         $conProyecto = getConnection();
-        $consulta = "select book_id, title from books order by title";
+        $consulta = "select * from products order by ProductID desc";
         $stmt = $conProyecto->prepare($consulta);
 
         $stmt->execute();
-        $libros_array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $productos_array = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $ex) {
-        die("Error al recuperar los libros " . $ex->getMessage());
+        die("Error al recuperar los productos " . $ex->getMessage());
     }
 
   
-    return $libros_array;
+    return $productos_array;
 }
 /**
- * mostrar_libros
- * Crea una fila html mostrando en cada celda de datos book_id y title. Además añade un botón en un formulario para permitir su borrado.
- * @param  array $libros_array un array asociativo con dos claves  book_id y title
+ * mostrar_productos
+ * Crea una fila html mostrando en cada celda de datos ProductName y ProductID y Price. 
+ * @param  array $productos_array un array asociativo con 3 claves: una por cada columna
  * @return void
  */
-function mostrar_libros(array $libros_array)
+function mostrar_productos(array $productos_array)
 {
-    foreach ($libros_array as $fila) {
+    foreach ($productos_array as $fila) {
         echo "<tr class='text-center'><th scope='row'>";
      
-        echo "<td>{$fila['book_id']}</td>";
-        echo "<td>{$fila['title']}</td>";
-        echo "<td>";
-        echo "<form   method='POST'
-style='display:inline'>";
-       
-        echo "<input type='hidden' name='id' value='{$fila['book_id']}'>"; //mandamos el código del producto a borrar
-        echo "<input type='submit' name='borrar' onclick=\"return confirm('¿Borrar Producto?')\"class='btn btn-danger' value='Borrar'>";
-        echo "</form>";
-        echo "</td>";
+        echo "<td>{$fila['ProductID']}</td>";
+        echo "<td>{$fila['ProductName']}</td>";
+        echo "<td>{$fila['Price']}</td>";
+      
         echo "</tr>";
     }
 }
@@ -69,7 +58,7 @@ scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- css para usar Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Tema 3</title>
+    <title>Listado de productos</title>
 </head>
 
 <body>
@@ -80,29 +69,21 @@ scale=1.0, minimum-scale=1.0">
             <thead>
                 <tr class="text-center">
                     <th scope="col"></th>
-                    <th scope="col">Book_id</th>
-                    <th scope="col">Título</th>
+                    <th scope="col">ProductID</th>
+                    <th scope="col">ProductName</th>
+                    <th scope="col">Price</th>
                  
                 </tr>
             </thead>
             <tbody>
                 <?php
-                mostrar_libros($libros_array);
+                mostrar_productos($productos_array);
 
                 ?>
             </tbody>
         </table>
 
-        <?php
-        if (isset($_POST["id"], $_POST["borrar"])) {
-            if ($libro_borrado) {
-                echo '<div class="alert alert-success" role="alert">    Libro con book_id: ' . $cod . ' borrado correctamente.</div>';
-            } else {
-                echo '<div class="alert alert-danger" role="alert">   No se ha podido eliminar el libro con el book_id:' . $cod . '  </div>';
-            }
-        }
-
-        ?>
+      
     </div>
 </body>
 
