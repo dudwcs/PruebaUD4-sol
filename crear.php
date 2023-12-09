@@ -106,15 +106,7 @@
         }
 
 
-        /*
-         * Summary of createBook
-         * @param string $title título del libro a crear
-         * @param int $publisher_id  id del editor del libro a crear
-         * @param string|null $isbn  ISBN del libro a crear
-         * @param DateTimeImmutable|null $pubDate  fecha de publicación del libro a crear
-         * @param array|null $book_author_ids  array con los ids de los autores, si los hay, null en caso contrario
-         * @return bool Devuelve true si hubo éxito en la creación, falso en caso contrario
-         */
+     
         /**
          * Summary of create_product
          * @param string $product_name nombre del producto
@@ -132,7 +124,6 @@
             try {
                 $conProyecto = getConnection();
                 $conProyecto->beginTransaction();
-
 
                 $pdostmt = $conProyecto->prepare("INSERT  INTO products(ProductName, price) 
             VALUES( ?, ?)");

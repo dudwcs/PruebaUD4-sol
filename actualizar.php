@@ -14,7 +14,6 @@
 <body>
     <?php
     require_once 'conexion.php';
-    require_once 'util.php';
     $product_name = "";
     $price = 0;
     $exito = false;
@@ -22,7 +21,6 @@
 
 
     if (isset($_GET["prod_id"])) {
-
         $prod_id = $_GET["prod_id"];
 
         $producto = findProductById($prod_id);
@@ -102,8 +100,6 @@
     }
 
 
-
-
     function update_product(
         string $product_name,
         float $price,
@@ -114,7 +110,6 @@
 
         try {
             $conProyecto = getConnection();
-            $inTransaction = $conProyecto->inTransaction();
             $pdostmt = $conProyecto->prepare("UPDATE  products set ProductName = ?, Price = ?
                 WHERE ProductId = ?");
 
@@ -123,7 +118,7 @@
             $pdostmt->bindValue(3, $product_id, PDO::PARAM_INT);
             $exito = $pdostmt->execute();
 
-            $pdostmt->debugDumpParams();
+           // $pdostmt->debugDumpParams();
         } catch (Exception $ex) {
             $exito = false;
 
