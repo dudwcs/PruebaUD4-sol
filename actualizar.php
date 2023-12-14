@@ -20,47 +20,7 @@
     $producto = array();
 
 
-    if (isset($_GET["prod_id"])) {
-        $prod_id = $_GET["prod_id"];
-
-        $producto = findProductById($prod_id);
-        if ($producto === false) {
-
-            echo "<div class=\"alert alert-danger\" role=\"alert\">
-                    No se ha encontrado el producto </div>";
-        } else { ?>
-
-            <div class="container-fluid">
-                <header class="mb-5">
-                    <div class="p-5 text-center " style="margin-top: 58px;">
-                        <h1 class="mb-3"> Actualizar producto </h1>
-
-                    </div>
-                </header>
-                <form class='form-control ' method="post">
-                    <div>
-                        <label for="productName" class="form-label col-3">Nombre producto</label>
-                        <input name="productName" type="text" class="form-control col-9" id="productName" pattern="^(?!\s*$).+" value="<?= $producto['ProductName'] ?>" required />
-                    </div>
-                    <div>
-                        <label for="price" class="form-label col-3">Precio</label>
-                        <input name="price" type="number" step="0.01" class="form-control col-9" id="price" required value="<?= $producto['Price'] ?>" />
-                    </div>
-                    <input type="hidden" value="<?= $producto['ProductID'] ?>" name="prod_id" />
-
-                    <div class="row d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary my-3 col-3">Actualizar producto</button>
-                    </div>
-
-                </form>
-            </div>
-    <?php }
-    } else {
-        echo "<div class=\"alert alert-info\" role=\"alert\">
-           Añade el parámetro prod_id a la URL. Por ejemplo:
-           http://localhost:3000/actualizar.php?prod_id=1 </div>";
-    }
-    ?>
+       ?>
     <?php
 
     if (isset($_POST["productName"])) {
@@ -126,6 +86,47 @@
         Ha ocurrido una excepción durante la actualización: " . $ex->getMessage() . "</div>";
         }
         return $exito;
+    }
+
+    if (isset($_GET["prod_id"])) {
+        $prod_id = $_GET["prod_id"];
+
+        $producto = findProductById($prod_id);
+        if ($producto === false) {
+
+            echo "<div class=\"alert alert-danger\" role=\"alert\">
+                    No se ha encontrado el producto </div>";
+        } else { ?>
+
+            <div class="container-fluid">
+                <header class="mb-5">
+                    <div class="p-5 text-center " style="margin-top: 58px;">
+                        <h1 class="mb-3"> Actualizar producto </h1>
+
+                    </div>
+                </header>
+                <form class='form-control ' method="post">
+                    <div>
+                        <label for="productName" class="form-label col-3">Nombre producto</label>
+                        <input name="productName" type="text" class="form-control col-9" id="productName" pattern="^(?!\s*$).+" value="<?= $producto['ProductName'] ?>" required />
+                    </div>
+                    <div>
+                        <label for="price" class="form-label col-3">Precio</label>
+                        <input name="price" type="number" step="0.01" class="form-control col-9" id="price" required value="<?= $producto['Price'] ?>" />
+                    </div>
+                    <input type="hidden" value="<?= $producto['ProductID'] ?>" name="prod_id" />
+
+                    <div class="row d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary my-3 col-3">Actualizar producto</button>
+                    </div>
+
+                </form>
+            </div>
+    <?php }
+    } else {
+        echo "<div class=\"alert alert-info\" role=\"alert\">
+           Añade el parámetro prod_id a la URL. Por ejemplo:
+           http://localhost:3000/actualizar.php?prod_id=1 </div>";
     }
 
 
